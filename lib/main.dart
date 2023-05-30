@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Text Animation',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -49,8 +49,7 @@ class StringAnimator extends StatefulWidget {
   _StringAnimatorState createState() => _StringAnimatorState();
 }
 
-class _StringAnimatorState extends State<StringAnimator>
-    with SingleTickerProviderStateMixin {
+class _StringAnimatorState extends State<StringAnimator> {
   bool animate = false;
   List<Character> textArray = [];
   @override
@@ -130,14 +129,6 @@ class _AnimatedTextState extends State<AnimatedText>
         Tween<double>(begin: 0.0, end: -10.5).animate(controller);
     reverseAnimation = Tween<double>(begin: 10.5, end: 0.0).animate(
         CurvedAnimation(parent: controller, curve: Curves.easeInOutQuint));
-    forwardAnimation!.addListener(() {
-      setState(() {
-        print(forwardAnimation!.value);
-      });
-    });
-    reverseAnimation!.addListener(() {
-      setState(() {});
-    });
   }
 
   @override
@@ -164,8 +155,14 @@ class _AnimatedTextState extends State<AnimatedText>
       child: Center(
         child: Stack(
           children: [
-            Align(
-              alignment: Alignment(0.0, forwardAnimation!.value),
+            AnimatedBuilder(
+              animation: forwardAnimation!,
+              builder: (context, child) {
+                return Align(
+                  alignment: Alignment(0.0, forwardAnimation!.value),
+                  child: child,
+                );
+              },
               child: Text(
                 widget.text,
                 style: GoogleFonts.montserrat(
@@ -175,8 +172,14 @@ class _AnimatedTextState extends State<AnimatedText>
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment(0.0, reverseAnimation!.value),
+            AnimatedBuilder(
+              animation: reverseAnimation!,
+              builder: (context, child) {
+                return Align(
+                  alignment: Alignment(0.0, reverseAnimation!.value),
+                  child: child,
+                );
+              },
               child: Text(
                 widget.text,
                 style: GoogleFonts.montserrat(
